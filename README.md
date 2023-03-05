@@ -1,5 +1,5 @@
 # Class-Projects
-Python, SQL, JavaScript, &amp; R projects. Organized by language. Topics include data engineering, web development, and data science. 
+Python, SQL, & JavaScript, projects. Organized by language. Topics include data engineering, web development, and data science. 
 The repository is organized by class and primary programming langauge. Each folder has assignments, labs, and a final project, depending on the class.
 The files are a mix of different things. Jupyter notebooks, expo projects, indivdual scripts, and CSV/Excel files.
 
