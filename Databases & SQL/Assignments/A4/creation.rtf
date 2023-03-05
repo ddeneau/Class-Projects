@@ -1,0 +1,142 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red45\green45\blue45;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c23137\c23137\c23137;\cssrgb\c100000\c100000\c100000;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs30 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 -- -----------------------------------------------------\
+-- Table `project_test`.`trails`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`trails` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`trails` (\
+`trail_id` INT UNSIGNED NOT NULL,\
+`trail_name` VARCHAR(100) NULL,\
+`trail_distance` VARCHAR(50) NULL,\
+`trail_rating` VARCHAR(45) NULL,\
+`trail_type` VARCHAR(45) NULL,\
+`trail_difficulty` VARCHAR(45) NULL,\
+`location_id` INT UNSIGNED NOT NULL,\
+PRIMARY KEY (`trail_id`, `location_id`),\
+INDEX `fk_trails_locations1_idx` (`location_id` ASC) VISIBLE,\
+CONSTRAINT `fk_trails_locations1`\
+FOREIGN KEY (`location_id`)\
+REFERENCES `project_test`.`locations` (`states_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION)\
+ENGINE = InnoDB;\
+\
+\
+-- -----------------------------------------------------\
+-- Table `project_test`.`ameities`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`ameities` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`ameities` (\
+`amenity_id` INT UNSIGNED NOT NULL,\
+`amenity_type` VARCHAR(45) NULL,\
+`amenity_description` VARCHAR(250) NULL,\
+PRIMARY KEY (`amenity_id`))\
+ENGINE = InnoDB;\
+\
+\
+-- -----------------------------------------------------\
+-- Table `project_test`.`entrances`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`entrances` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`entrances` (\
+`entrance_id` INT UNSIGNED NOT NULL,\
+`entrance_description` VARCHAR(45) GENERATED ALWAYS AS (),\
+`exit_description` VARCHAR(45) NULL,\
+`parking_address` VARCHAR(100) NULL,\
+`trail_id` INT UNSIGNED NOT NULL,\
+PRIMARY KEY (`entrance_id`, `trail_id`),\
+INDEX `fk_entrances_trails1_idx` (`trail_id` ASC) VISIBLE,\
+CONSTRAINT `fk_entrances_trails1`\
+FOREIGN KEY (`trail_id`)\
+REFERENCES `project_test`.`trails` (`trail_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION)\
+ENGINE = InnoDB;\
+\
+\
+-- -----------------------------------------------------\
+-- Table `project_test`.`visitors`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`visitors` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`visitors` (\
+`vistor_id` INT UNSIGNED NOT NULL,\
+`first_name` VARCHAR(45) NULL,\
+`last_name` VARCHAR(45) NULL,\
+`phone_number` VARCHAR(45) NULL,\
+`email_address` VARCHAR(45) NULL,\
+`locations_id` INT UNSIGNED ZEROFILL NOT NULL,\
+PRIMARY KEY (`vistor_id`, `locations_id`),\
+INDEX `fk_visitors_locations1_idx` (`locations_id` ASC) VISIBLE,\
+CONSTRAINT `fk_visitors_locations1`\
+FOREIGN KEY (`locations_id`)\
+REFERENCES `project_test`.`locations` (`location_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION)\
+ENGINE = InnoDB;\
+\
+\
+-- -----------------------------------------------------\
+-- Table `project_test`.`parking_records`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`parking_records` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`parking_records` (\
+`parking_record_id` INT UNSIGNED NOT NULL,\
+`vehicle_description` VARCHAR(45) NULL,\
+`entrance_time` DATETIME NULL,\
+`exit_time` DATETIME NULL,\
+`visitor_id` INT UNSIGNED NOT NULL,\
+`entrance_id` INT UNSIGNED NOT NULL,\
+PRIMARY KEY (`parking_record_id`, `visitor_id`, `entrance_id`),\
+INDEX `fk_parking_records_visitors1_idx` (`visitor_id` ASC) VISIBLE,\
+INDEX `fk_parking_records_entrances1_idx` (`entrance_id` ASC) VISIBLE,\
+CONSTRAINT `fk_parking_records_visitors`\
+FOREIGN KEY (`visitor_id`)\
+REFERENCES `project_test`.`visitors` (`vistor_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION,\
+CONSTRAINT `fk_parking_records_entrances1`\
+FOREIGN KEY (`entrance_id`)\
+REFERENCES `project_test`.`entrances` (`entrance_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION)\
+ENGINE = InnoDB;\
+\
+\
+-- -----------------------------------------------------\
+-- Table `project_test`.`trails_amenities`\
+-- -----------------------------------------------------\
+DROP TABLE IF EXISTS `project_test`.`trails_amenities` ;\
+\
+CREATE TABLE IF NOT EXISTS `project_test`.`trails_amenities` (\
+`trail_id` INT UNSIGNED NOT NULL,\
+`amenity_id` INT UNSIGNED NOT NULL,\
+PRIMARY KEY (`trail_id`, `amenity_id`),\
+INDEX `fk_trails_amenities_ameities1_idx` (`amenity_id` ASC) VISIBLE,\
+CONSTRAINT `fk_trails_amenities_trails1`\
+FOREIGN KEY (`trail_id`)\
+REFERENCES `project_test`.`trails` (`location_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION,\
+CONSTRAINT `fk_trails_amenities_ameities1`\
+FOREIGN KEY (`amenity_id`)\
+REFERENCES `project_test`.`ameities` (`amenity_id`)\
+ON DELETE NO ACTION\
+ON UPDATE NO ACTION)\
+ENGINE = InnoDB;\
+\
+\
+SET SQL_MODE=@OLD_SQL_MODE;\
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;\
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;}

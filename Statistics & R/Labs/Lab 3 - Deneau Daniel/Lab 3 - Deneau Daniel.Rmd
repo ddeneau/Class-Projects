@@ -1,0 +1,71 @@
+---
+title: "Lab 3: Probability"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/kobe.RData", destfile = "kobe.RData")
+load("kobe.RData")
+head(kobe)
+```
+
+### Exercise 1
+
+There is one hit and one miss in a streak of length 1. In a streak of length 0, the first shot must have been a miss.
+```{r code-chunk-1}
+kobe$basket[1:9]
+```
+
+
+### Exercise 2
+
+The distribution is skewed left with a median around 0 and a high variability. His typical streak length was 0 baskets, and his longest streak was 4 baskets.
+```{r code-chunk-2}
+kobe_streak <- calc_streak(kobe$basket)
+barplot(table(kobe_streak))
+```
+
+### Exercise 3
+The unfair coin flips came up heads 16 times. 
+```{r code-chunk-3}
+outcomes <- c("H", "M")
+sim_unfair_coin <- sample(outcomes, size = 100, replace = TRUE, prob = c(0.2, 0.8))
+table(sim_unfair_coin)
+```
+
+### Exercise 4
+In order to reflect the 45% adjustment, we need to add weights for the hit and miss outcomes in the sample function. The weight for a hit should be  .45, and the weight for a miss will be (1-.45) = .55
+```{r code-chunk-4}
+outcomes <- c("H", "M")
+sim_basket <- sample(outcomes, size = 133, replace = TRUE, prob = c(0.45, 0.65))
+sim_basket
+```
+
+### OYO 1
+The distribution for the simulated shooter is skewed left with a median centered around 0 and high variability. The typical streak length is 0 shots, and the longest streak is 4 shots.
+```{r code-chunk-OYO1}
+sim_streak <- calc_streak(sim_basket)
+barplot(table(sim_streak))
+```
+
+### OYO 2
+I would expect the distribution to have a similar shape with a few different key values like longest streak due to the random sampling.
+```{r code-chunk-OYO2}
+outcomes <- c("H", "M")
+second_sim_basket <- sample(outcomes, size = 133, replace = TRUE, prob = c(0.45, 0.65))
+sim_streak <- calc_streak(second_sim_basket)
+barplot(table(sim_streak))
+```
+
+
+## OYO 3
+The distributions are similar, with a few major differences such as the longest streak being longer in Kobe's case, and more longer streaks than the simulated shooter. Comparing these two distributions, even though they are similar, it does seem like evidence that the hot hand model fits Kobe's shooting patterns, as the major differences between the two distributions likely are due to the random sampling.
+```{r code-chunk-OYO3}
+barplot(table(kobe_streak))
+barplot(table(sim_streak))
+```
+

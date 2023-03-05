@@ -1,0 +1,109 @@
+---
+title: "Lab 2: Intro to Data"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Exercise 1
+
+There are 20000 cases recorded in the dataset, with nine variables
+genhealth - categorical.
+exerany - categorical
+hlthplan - categorical
+smoke100 - categorical
+height - discrete 
+weight - discrete
+wtdesire - discrete
+age - discrete
+gender - categorical
+
+```{r code-chunk-Excercise1}
+source("http://www.openintro.org/stat/data/cdc.R")
+dim(cdc)
+```
+
+### Exercise 2
+Weight IQR: 50 pounds
+Age IQR:  26 years
+
+There are 9569 males in the sample. Proportionally, 23.3% of the sample reported excellent health.
+
+```{r code-chunk-Excercise 2}
+summary(cdc$weight)
+summary(cdc$age)
+table(cdc$gender)/20000
+table(cdc$exerany)/20000
+table(cdc$gender)
+table(cdc$genhlth)/20000
+```
+### Exercise 3
+The plot shows that proportionally more women have not smoked 100 cigarettes compared to men.
+
+```{r code-chunk-Excercise 3}
+mosaicplot(table(cdc$gender,cdc$smoke100))
+```
+
+### Exercise 4
+```{r code-chunk-e4}
+under23_and_smoke <- subset(cdc, smoke100 == 1 & age < 23)
+```
+
+### Exercise 5
+The BMI and general health boxplot shows that the IQRs and medians are similar, but as BMI increases, perceived general health decreases slightly.
+
+I think whether or not people exercised any relates to BMI because less exercise would indicate a likely higher BMI. The box plots side by side show that the median BMI of those in the did not exercise category is slighlly higher than the median BMI of those who did exercise. The group that did exercise also had more outliers in the lower BMI ranges.
+
+```{r code-chunk-e5}
+bmi <- (cdc$weight / cdc$height^2) * 703
+boxplot(bmi ~ cdc$genhlth)
+boxplot(bmi ~ cdc$exerany)
+```
+
+### OYO 1
+It seems that weight trends positively and linearly as desired weight increases. With some rare cases where desired weight matches lower weights, or the desired weight is higher than the weight. Generally, most of the desired weights are low and are close to the actual weights. 
+
+```{r code-chunk-o1}
+plot(x = cdc$wtdesire, y = cdc$weight)
+```
+
+### OYO 2
+```{r code-chunk-o2}
+wdiff <- cdc$weight - cdc$wtdesire
+```
+
+### OYO 3
+wdiff is discrete numerical data. If an observation is 0, that means the desired weight matches the observations weight. If it is positive, that person wants to lose wdiff pounds. If it is negative, that person wants to gain wdiff pounds.
+
+### OYO 4
+wdiff has a unimodal, symmetric distribution with a spread of around 300 pounds.The median is around -10. This tells us that most generally people want to gain about 10 pounds, and that less people generally want to gain weight, or gain or loose extreme amounts of weight.
+```{r code-chunk-o4}
+hist(wdiff)
+```
+
+### OYO 5
+Based on the side-by-side plots, it seems that the ranges, IQR's and medians for both women and men are very similar. The summaries show slight differences in values, but overall, it seems that men and women view their weight similarly.
+
+```{r code-chunk-o5}
+women <- subset(cdc, gender == "f")
+men <- subset(cdc, gender == "m")
+wdiff_women <- women$wtdesire - women$weight
+wdiff_men <- men$wtdesire - men$weight
+boxplot(wdiff ~ cdc$gender)
+
+summary(wdiff_women)
+summary(wdiff_men)
+```
+
+### OYO 6
+Since the mean weight is around 170, and the standard deviation is 40 pounds, 70% of observations will be within 40 pounds of 170.
+
+```{r code-chunk-o6}
+mean(cdc$weight)
+sd(cdc$weight)
+```

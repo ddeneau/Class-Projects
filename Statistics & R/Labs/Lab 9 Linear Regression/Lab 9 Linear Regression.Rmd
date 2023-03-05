@@ -1,0 +1,152 @@
+---
+title: "Lab 9: Linear Regression"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/mlb11.RData", destfile = "mlb11.RData")
+load("mlb11.RData")
+```
+
+### Exercise 1
+
+I would use a scatterplot.
+The relationship does look linear, but there are some clouds of points with high runs and lower values of at_bats making the trend a bit weaker.
+Overall, I would be comfortable using this model to predict the number of runs.
+
+```{r code-e1}
+
+plot(mlb11$at_bats, mlb11$runs)
+cor(mlb11$runs, mlb11$at_bats)
+mlb11
+```
+
+### Exercise 2
+The plot shows a positive linear trend, that is strong with R = 0.61. We would see a stronger correlation if it were not for a cloud of observations towards the left side. The general trend is that the number of runs increases with as at_bat increases.
+```{r code-e2}
+plot_ss(x = mlb11$at_bats, y = mlb11$runs)
+plot_ss(x = mlb11$at_bats, y = mlb11$runs, showSquares = TRUE)
+```
+### Exercise 3
+The smallest sum of squares was 123721.9
+```{r code-e3}
+plot_ss(x = mlb11$at_bats, y = mlb11$runs)
+```
+
+### Exercise 4
+y_hat = 415.2389 + 1.8345*homeruns
+The slope tells us that the number of runs increases by 1.835 for each increase in the home runs.
+```{r code-e4}
+m1 <- lm(runs ~ at_bats, data = mlb11)
+summary(m1)
+
+m2 <- lm(runs ~ homeruns, data = mlb11)
+summary(m2)
+
+```
+
+### Exercise 5
+Using the equation, a team with 5,578 at-bats would have a predicted number of runs of: 728 runs.
+```{r code-e51}
+y <- -2789.2429 + (0.6305 * 5578)
+y
+```
+
+Using the plotted pair (5579, 713), we see that 728 is an overstimate with the residual being: 728-713 = 15
+```{r code-e5}
+plot(mlb11$runs ~ mlb11$at_bats)
+abline(m1)
+data.frame(mlb11$runs, mlb11$at_bats)
+728 - 713
+```
+
+### Excercise 6
+There are no obvious patterns, so the relationship could be modeled linearly. We would need to perform a hypothesis test to determine whether the linearity is statistically significant or due to chance. 
+```{r code-e6}
+plot(m1$residuals ~ mlb11$at_bats)
+abline(h = 0, lty = 3)  # adds a horizontal dashed line at y = 0
+```
+
+```{r code e7e8}
+hist(m1$residuals)
+qqnorm(m1$residuals)
+qqline(m1$residuals)  # adds diagonal line to the normal prob plot
+```
+### Exercise 7
+The histogram is nearly normal even though the shape is not perfect, and the normal probability plot follows a linear trend closely. So the residual conditions appear to be met.
+
+### Exercise 8
+The variability in both plots is not very high at all, so the constant variability condition appears to be met.
+
+### OY0 1
+I would like to see if players with less strikeouts have higher run counts. At a glance, there does appear to be a negative linear relationship.
+```{r code-oyo1}
+m3 <- lm(runs ~ strikeouts, data = mlb11)
+plot(mlb11$runs ~ mlb11$strikeouts)
+abline(m3)
+```
+
+### OYO 2
+Only 16.9% of the variaility in runs is explained by strikeouts, compared to 37.3% for at-bats. So my model does not nearly predict runs at well.
+```{r code-oyo2}
+cor(mlb11$runs, mlb11$at_bats)
+cor(mlb11$runs, mlb11$strikeouts)
+summary(m1)
+summary(m3)
+```
+
+### OYO 3
+Batting average appears to best predict runs, with a correlation coefficient of 0.81
+```{r code-oyo3}
+m4 <- lm(runs ~ bat_avg, data = mlb11)
+plot(mlb11$runs ~ mlb11$bat_avg)
+cor(mlb11$runs, mlb11$bat_avg)
+abline(m4)
+
+hist(m4$residuals)
+qqnorm(m4$residuals)
+qqline(m4$residuals)
+
+summary(m4)
+
+```
+### OYO 4
+All of these variables do seem to be really good predictors for runs, with high correlation coefficients and strong linear trends in their plots. The best predictor is on-base plus slugging. This metric seems to take in account a lot of factors that makes high performing players have a higher value. Therefore the results do not seem surprising.
+```{r code-oyo4}
+m_e_1 <- lm(runs ~ new_onbase, data = mlb11)
+m_e_2 <- lm(runs ~ new_slug, data = mlb11)
+m_e_3 <- lm(runs ~ new_obs, data = mlb11)
+
+plot(mlb11$runs ~ mlb11$new_onbase)
+cor(mlb11$runs, mlb11$new_onbase)
+abline(m_e_1)
+
+plot(mlb11$runs ~ mlb11$new_slug)
+cor(mlb11$runs, mlb11$new_slug)
+abline(m_e_2)
+
+plot(mlb11$runs ~ mlb11$new_obs)
+cor(mlb11$runs, mlb11$new_obs)
+abline(m_e_3)
+```
+
+### OYO 5
+Linearity: The data does show a linear trend with a strong correlation coefficient.
+
+Nearly Normal Residuals: The histogram of the residuals resembles a normal distribution closely.
+
+Constant Variability: The residual plot shows constant variability, as do the points on the normal probability plot.
+
+Independent Observations: We know from the dataset that each observation is independent.
+```{r code-oyo5}
+plot(m_e_3$residuals ~ mlb11$new_obs)
+abline(h = 0, lty = 3)  # adds a horizontal dashed line at y = 0
+hist(m_e_3$residuals)
+qqnorm(m_e_3$residuals)
+qqline(m_e_3$residuals)  # adds diagonal line to the normal prob plot
+summary(m_e_3)
+```

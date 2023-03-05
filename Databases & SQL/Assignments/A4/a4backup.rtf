@@ -1,0 +1,111 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- Answer 1 --\
+USE ap;\
+CREATE VIEW late_invoices_2018 AS\
+	SELECT vendor_name, invoice_number, invoice_total, \
+		DATE_FORMAT(invoice_due_date, '%a, %b, %D') AS 'due_date',\
+        DATE_FORMAT(payment_date, '%a, %b, %D') AS 'payment_date',\
+        DATEDIFF(payment_date, invoice_due_date) AS 'days_late'\
+		FROM vendors JOIN invoices USING(vendor_id)\
+		WHERE DATEDIFF(payment_date, invoice_due_date) > 0 OR payment_date IS NULL\
+	ORDER BY vendor_name, DATEDIFF(payment_date, invoice_due_date) DESC, invoice_total DESC;\
+\
+\
+\
+\'97 Answer 2 \'97\
+-- Partial script for the stored procedure 'owed_to_state_vendors'\
+\
+-- HINT: This stored procedure is built around a SELECT query.\
+-- You may want to first build the query, and then plug it into the code below.\
+-- See the hints below, right after the BEGIN line, for help with the SELECT query.\
+\
+DROP PROCEDURE IF EXISTS owed_to_state_vendors;\
+\
+DELIMITER //\
+\
+-- --> The CREATE statement goes here. Remember to add the parameter \
+-- --- (in parentheses); its data type should be VARCHAR(50)\
+CREATE PROCEDURE owed_to_state_vendors(\
+		IN state_abbreviation VARCHAR(50))\
+BEGIN    \
+	SELECT vendor_name, SUM(invoice_total - payment_total - credit_total), COUNT(DISTINCT vendor_id)\
+		FROM vendors JOIN invoices USING(vendor_id)\
+        WHERE vendor_state = state_abbreviation AND (invoice_total - payment_total - credit_total) > 0\
+	GROUP BY vendor_name\
+	ORDER BY vendor_name;\
+END //\
+\
+DELIMITER ;\
+\
+CALL owed_to_state_vendors('CA');\
+-- --> TEST YOUR CODE:\
+-- --- Run this statement: CALL owed_to_state_vendors('CA');\
+-- --- Do your see two rows with the following values?\
+-- --- \
+-- --- 'Blue Cross', 224.00, 3\
+-- --- 'Ford Motor Credit Company', 503.20, 1\
+-- --- \
+-- --- If "Yes", you have built the stored procedure as required; \
+-- --- if "No", continue working on it.\
+-- --- If you see an extra row from IBM, please re-run your create_databases.sql script \
+-- --- as this may show up after completing Question 3. \
+\
+\
+\'97 Answer 3 \'97\
+-- Partial script for the trigger 'new_invoice_row'\
+\
+DROP TRIGGER IF EXISTS new_invoice_row;\
+\
+DELIMITER //\
+\
+-- --> Add here the statement that will create a trigger \
+-- --- with the name new_invoice_row\
+CREATE TRIGGER new_invoice_row\
+	AFTER INSERT ON invoices\
+	FOR EACH ROW\
+	\
+BEGIN\
+	DECLARE invoice_id_var INT;\
+	DECLARE invoice_total_var DECIMAL (9,2);\
+	-- --> declare here the variable that will catch and hold \
+	-- --- the value for the vendor_id column in the newly-added row; \
+	-- --- name the variable vendor_id_var; 	\
+	-- --- don't forget to declare its data type\
+    DECLARE vendor_id_var INT; \
+	DECLARE vendor_name_var VARCHAR(30);\
+\
+	SET invoice_id_var = NEW.invoice_id;\
+	-- --> set here the value of the variable invoice_total_var; \
+	-- --- it should be equal to the newly-added invoice_total value; 	\
+	-- --- observe the other SET statements as examples\
+	SET invoice_total_var = NEW.invoice_total; \
+	SET vendor_id_var = NEW.vendor_id;\
+	SELECT vendor_name INTO vendor_name_var FROM vendors WHERE vendor_id = vendor_id_var;\
+	INSERT INTO new_invoice_records VALUES\
+	(invoice_id_var, CONCAT("You have added a new invoice from ", vendor_name_var, "with an invoice total of $", invoice_total_var), NOW());\
+	-- --> (add here the values that should be inserted into the \
+	-- --- new_invoice_records table when the trigger executes;\
+	-- --- you will need a CONCAT() to generate the text value \
+	-- --- that will go into the new_invoice_record_text column);\
+END//\
+\
+DELIMITER ;\
+\
+-- --> Test your code:\
+-- --- Run this INSERT query: \
+-- --- INSERT INTO invoices VALUES (118,34,'ZXA-080','2018-02-01',650.50,650.50,0,3,'2018-03-01', NULL);\
+-- --- Then run this SELECT query: SELECT * FROM new_invoice_records;\
+-- --- Do your see a row with the following values?\
+-- --- \
+-- --- '118', 'You have added a new invoice from IBM with an invoice total of $650.50', '2020-04-17 02:18:17'\
+-- --- NOTE: The date and time in your 3rd column will be different.\
+-- --- \
+-- --- If "Yes", you have built the trigger as required; \
+-- --- if "No", keep on working on it.\
+}

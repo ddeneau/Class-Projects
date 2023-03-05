@@ -1,0 +1,118 @@
+---
+title: "Problem Set 5"
+author: "Daniel Deneau"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problems  5.2,  5.5,  5.7,  5.9,  5.15,  5.25,  5.26,  5.37
+
+
+## Problem 5.2:
+a) proportion
+b) proportion
+c) mean
+d) mean
+e) mean
+
+## Probelm 5.5:
+a) Sampling Distribution
+b) Symmetric from the central limit theorem, since np and n(1-p) are both greater than 10.
+c) The variability is: 0.0096
+d) Standard error
+e) The variability will increase as the number of observations per sample is lower.
+
+```{r 5.5}
+p <- 0.08
+n <- 800
+print("Variability (c) : ")
+se <- sqrt((p*(1-p))/n)
+se
+n <- 250
+print("Variability (e) : ")
+se <- sqrt((p*(1-p))/n)
+se
+```
+
+
+## Problem 5.7:
+95% Confidence Interval: (0.4264, 0.4735)
+
+The population proportion of U.S. adults who live with one or more chronic conditions
+is within (0.4264, 0.4735) with 95% confidence.
+```{r 5.7}
+SE <- .012
+p <- .45
+z <- 1.96
+p + z * SE
+p - z * SE
+
+```
+## Problem 5.9:
+a) False, we can only say with 95% confidence that the population proportion is within the interval.
+b) True, the confidence interval in this case is what percentage intervals contain the population proportion.
+c) True, the range of proportions is 0.4446 to 0.4735 for a 95% confidence interval, which is below 0.5
+d) False, standard error applies to the sample proportion in general.
+
+## 5.15,  
+a) The null hypothesis states that student grades would be unchanged from the previous year. The alternative hypothesis states that student grades will be improved or worse from the previous year
+H_o: new_grades = previous_grades
+H_a: new_grades /= previous_grades (does not equal)
+
+b) The null hypothesis states that non-business activity time will be around 15 minutes during March Madness. The alternative hypothesis states that there will be an increase or decrease in non-business activity time over 15 minutes during March Madness.
+H_o: time = 15 minutes
+H_a: time /= 15 minutes (does not equal)
+
+
+## 5.25,
+h_o - what doctor says
+h_a - what she believes
+a) The anti-depressants have no effect on her Fibromyalgia symptoms. 
+b) Rejecting the null hypothesis that anti-depressants would help, when in fact the anti-depressants do help.
+c) Not rejecting the null hypothesis that anti-depressants help, and thinking they do help, when they actually do not help.
+
+## 5.26,
+a) I.The standard error decreases as n increases. 
+b) II. As there is 10% more room for error.
+c) Equal, since the p-value is a probability for observing data.
+d) I, it will be more likely to fail to reject the null hypothesis at that significance level than at a higher one.
+
+## 5.37
+A study examined the average pay for men and women entering the
+26. Men were, on average, paid more in 19 of those 21 positions. 
+
+a) Null Hypothesis: Gender is equally paid.
+   Alternative Hypothesis: Gender is not equally paid.
+   H_o: p = 0.5
+   H_a: p /= 0.5 (does not equal)
+   
+b) With n = 21 and p = 0.5, np = 10 and n(1-p) = 10. The sample was done randomly, so the success-failure and independence conditions hold.
+   p_hat = 19/21 = 0.9048
+   SE = 0.1118
+   
+   z value = 0.0203
+   
+   p value: 0.508
+   
+   Using a significance level of 0.05, we reject the null hypothesis and accept the alternative hypothesis that gender is not equally paid.
+   (50% of the )
+   
+```{r 5.37}
+n <-20
+p <-.5
+p_hat <- 19/21
+n*p
+n*(1-p)
+SE <- sqrt((p*(1-p))/n)
+Z <- (p_hat - p)/n
+
+pnorm(Z)
+
+
+```
+   

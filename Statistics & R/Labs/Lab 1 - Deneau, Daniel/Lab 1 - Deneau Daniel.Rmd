@@ -1,0 +1,78 @@
+---
+title: "Lab 1: Intro to R"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Exercise 1
+
+```{r view-girls-counts}
+arbuthnot$girls
+```
+
+
+### Exercise 2
+
+Overall there is a positive trend in the number of girl baptisms 
+with a few periods of decline.
+
+```{r trend-girls}
+plot(x = arbuthnot$year, y = arbuthnot$girls, type = "l")
+```
+
+
+### Exercise 3
+
+There seems to be a very slight trend towards proportionally less boy baptisms throughout the years. Indicating that the gap between boy and girl baptisms decreased over time.
+
+```{r plot-prop-boys-arbuthnot}
+plot(x = arbuthnot$year, y = (arbuthnot$boys / (arbuthnot$boys + arbuthnot$girls)))
+```
+
+
+### Exercise 4
+
+The present dataset is 3 columns, year, boys, and girls, and has 63 entries.
+Each entry shows the year, number of boys born, and the number of girls born.
+
+```{r dim-present}
+dim(present)
+```
+
+
+### OYO 1
+
+The present set has a count of 63 with a scale in the millions, while the arbuthnot set has a count of 82, with a scale only in the thousands 17. The range of time in the present data set is 62 years, which is less than the 81 years in the arbuthnot set.
+
+```{r count-compare}
+count(present)
+count(arbuthnot)
+```
+
+
+### OYO 2
+
+The trend of boys being born in greater proportion than girls is shown in the plot, as
+the proportion does not drop below 1. However, the trend also shows that that proportion is has been decreasing linearly over time.
+
+```{r plot-prop-boys-present}
+plot(x = present$year, y = (present$boys / present$girls))
+```
+
+
+### OYO 3
+
+The maximum number of total births, 4268326, was in 1961.
+
+```{r find-max-total}
+max((present$boys + present$girls))
+which.max((present$boys + present$girls))
+present[22,] 
+```
+

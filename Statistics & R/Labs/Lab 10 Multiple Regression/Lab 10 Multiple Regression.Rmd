@@ -1,0 +1,199 @@
+---
+title: "Lab 10: Multiple Regression"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/evals.RData", destfile = "evals.RData")
+load("evals.RData")
+```
+
+### Exercise 1
+This is an observational study in which the student responses are being observed. Since this is not an expiriment, there is no control group to compare the results too. So a better question would be:
+
+"Does beauty have an impact on course evauluations, or is any impact just due to chance?"
+
+
+### Exercise 2
+The score variable is centered around 4.6 with a right-skew and average variability and spread.
+The skew tells us that most students give above average ratings. I expected the distribution to be a little more centered around average ratings, but it makes sense that most students would rate favorably if they are rating at all.
+```{r code-e2}
+hist(evals$score)
+```
+
+### Exercise 3
+The scatter plot of age and average beauty rating shows a negative linear trend with a moderately strong correlation. As age increases, the average beauty rating decreases linearly.
+
+Explanatory Variable: Age 
+Response Variable: Average beauty rating
+```{r code-e3}
+plot(evals$age, evals$bty_avg)
+```
+
+### Exercise 4
+Some of the observations overlapped, but with the noise it is easier to see the true number of observations.
+```{r code-e4}
+plot(evals$score ~ evals$bty_avg)
+plot(jitter(evals$score) ~ evals$bty_avg)
+```
+
+### Exercise 5
+The equation for the regression line is:
+y_hat = 3.88034 + 0.06664*bty_avg
+
+The score increases by 0.06664 points as the average beauty increases by a point.
+With an R-squared value of just 0.03502, there is a 3.5% chance of the results not being due to chance.
+
+The correlation is also not very strong at 0.187.
+
+Overall, it does not appear to be a practically significant predictor.
+
+
+```{r code-e5}
+m_bty <- lm(score ~ bty_avg, data = evals)
+
+plot(jitter(evals$score) ~ evals$bty_avg)
+abline(m_bty)
+summary(m_bty)
+cor(evals$bty_avg, evals$score)
+```
+
+### Exercise 6
+Linearity: The data barely shows a linear trend with a weak correlation coefficient.
+
+Nearly Normal Residuals: The histogram of the residuals resembles a normal distribution closely, with a slight right skew.
+
+Constant Variability: The residual plot shows constant variability. The points on the normal probability plot vary a more near the larger x values than for smaller ones.
+
+Independent Observations: We can assume from the data set that each observation is independent.
+```{r code-e6}
+plot(m_bty$residuals ~ evals$bty_avg)
+abline(h = 0, lty = 3)  # adds a horizontal dashed line at y = 0
+hist(m_bty$residuals)
+qqnorm(m_bty$residuals)
+qqline(m_bty$residuals)  # adds diagonal line to the normal prob plot
+```
+
+### Exercise 7
+```{r code-e7}
+plot(evals$bty_avg ~ evals$bty_f1lower)
+cor(evals$bty_avg, evals$bty_f1lower)
+plot(evals[,13:19])
+m_bty_gen <- lm(score ~ bty_avg + gender, data = evals)
+summary(m_bty_gen)
+```
+
+Check for outliers: The histogram shows few to non.
+```{r code-e71}
+hist(m_bty_gen$residuals)
+```
+
+
+There are no obvious patterns against fitted values.
+```{r e72}
+plot(abs(m_bty_gen$residuals) ~ evals$bty_f1lower)
+```
+There are no obvious patterns when viewing the data in order.
+```{r e73}
+plot(m_bty_gen$residuals)
+abline(h = 0, lty = 3)  # adds a horizontal dashed line at y = 0
+```
+
+
+The variability does not change much between ethnicity and gender.
+```{r e74}
+plot(m_bty_gen$residuals ~ evals$ethnicity)
+plot(m_bty_gen$residuals ~ evals$gender)
+abline(h = 0, lty = 3)  # adds a horizontal dashed line at y = 0
+```
+
+### Exercise 8
+The estimate of the beauty average changed to 0.07416 from 0.06664, but the R-squared is still low. So we can not be sure if it is due to chance.
+
+
+### Exercise 9
+y_hat = bo_hat + b1_hat * bty_avg
+
+Males tend to have the higher score.
+```{r code-e9}
+multiLines(m_bty_gen)
+```
+
+
+### Exercise 10
+With three levels of rank, R shows three variable names and then (Intercept) for the fourth.
+```{r e10}
+m_bty_rank <- lm(score ~ bty_avg - gender + rank, data = evals)
+plot(m_bty_rank)
+summary(m_bty_rank)
+```
+
+### Exercise 11
+I would expect the class level to not have much of an association with professor score since students of all levels feel different ways about professors.
+
+```{r e11}
+m_full <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval 
+             + cls_students + cls_level + cls_profs + cls_credits + bty_avg 
+             + pic_outfit + pic_color, data = evals)
+summary(m_full)
+```
+
+### Exercise 12
+
+The values such as R-squared and the summary p-value are very similar to the full model. Suggesting that class level really does not matter that much.
+```{r e12}
+m_modified <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval 
+             + cls_students + cls_profs + cls_credits + bty_avg 
+             + pic_outfit + pic_color, data = evals)
+summary(m_modified)
+```
+
+### Exercise 13
+The ethnicity changes raises score by 0.1234929 points, all other variables constant
+
+### Exercise 14.
+The coefficients are mostly slightly smaller, with the signficance levels also being lower and higher.
+```{r e14}
+m_modified2 <- lm(score ~ rank + ethnicity + gender + language + age + cls_perc_eval 
+             + cls_students + cls_level + cls_credits + bty_avg 
+             + pic_outfit + pic_color, data = evals)
+summary(m_modified2)
+```
+
+### Exercise 15
+y_hat = bo_hat + b1_hat*ethnicity + b2_hat*gender + b3_hat*language + b4_hat*age + b5_hat*perc_eval + b6_hat*credits + b7_hat*bty_avg + b8_hat*pic_color
+
+```{r e15}
+final_model <- lm(score ~ ethnicity + gender + language + age + cls_perc_eval + cls_credits + bty_avg + pic_color, data = evals)
+summary(final_model)
+```
+
+### Exercise 16
+There are few to no outliers shown in the histogram.
+There are no obvious patterns in the residuals vs fitted data
+There are no obvious patterns viewing the data in order.
+Against both ethnicity and gender, the boxplots do not vary much.
+
+```{r e16}
+hist(final_model$residuals)
+plot(abs(final_model$residuals) ~ evals$score)
+plot(final_model$residuals)
+plot(final_model)
+plot(final_model$residuals ~ evals$ethnicity)
+plot(final_model$residuals ~ evals$gender)
+```
+
+### Exercise 17
+The fact that each of the observations came from only one university might make the samples not as independent as they should be for analysis using linear regression.
+
+### Exercsise 18
+Male, non-minorities who teach a one-credit course, who had many students rate their course, received educations in English, receive high beauty scores, and are are young, are likely to have higher scores.
+
+### Exercise 19
+I would not be comfortable generalizing these conclusions to professors at any university because these observations all came from one specific university in one small part of the world. It is likely that different cultural values around the world would make the results of this study difficult to generalize to all universities.
+
+

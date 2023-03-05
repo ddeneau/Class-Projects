@@ -1,0 +1,112 @@
+---
+title: "Lab 4: The Normal Distribution"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/bdims.RData", destfile = "bdims.RData")
+load("bdims.RData")
+mdims <- subset(bdims, sex == 1)
+fdims <- subset(bdims, sex == 0)
+```
+
+### Exercise 1
+
+The male heights are normally distributed, with a median around 176. While the female heights are skewed slightly towards lower heights, with a median around 173. Males have a higher variability as well.
+
+```{r code-chunk-1}
+mdims <- subset(bdims, sex == 1)
+fdims <- subset(bdims, sex == 0)
+
+hist(mdims$hgt, probability = TRUE)
+hist(fdims$hgt, probability = TRUE)
+```
+
+### Exercise 2
+The normal distribution line does fit the histogram of female heights. With the lowest occuring heights reaching the ends of the distribution, and the most frequent heights in the center.
+```{r code-chunk-2}
+fhgtmean <- mean(fdims$hgt)
+fhgtsd   <- sd(fdims$hgt)
+
+hist(fdims$hgt, probability = TRUE)
+x <- 140:190
+y <- dnorm(x = x, mean = fhgtmean, sd = fhgtsd)
+lines(x = x, y = y, col = "blue")
+```
+
+### Exercise 3
+While the simulated points are close to the distribution line, a lot of the points are above or below the line. This simulated probability plot is close to the one for the real data.
+```{r code-chunk-3}
+sim_norm <- rnorm(n = length(fdims$hgt), mean = fhgtmean, sd = fhgtsd)
+qqnorm(sim_norm)
+qqline(sim_norm)
+```
+
+### Exercise 4
+These created plots look very similar to the ones created for the simlulated data, which provides evidence that female heights are nearly normal.
+```{r code-chunk-4}
+qqnormsim(fdims$hgt)
+qqnormsim(sim_norm)
+```
+
+### Exercise 5
+Based on the multiple plots generated of both the simulated and real female weights, it does seem that female weights also come from a normal distribution. The histogram shows features close to having a perfect normal distribution such as one center and symmetry, but is skewed left. But the similarities in the normal qq plots show evidence that female weights come from a female distribution.  
+```{r code-chunk-5}
+fwgtmean <- mean(fdims$wgt)
+fwgtsd   <- sd(fdims$wgt)
+
+hist(fdims$wgt, probability = TRUE)
+x <- 140:190
+y <- dnorm(x = x, mean = fwgtmean, sd = fwgtsd)
+lines(x = x, y = y, col = "blue")
+
+sim_norm_wgt <- rnorm(n = length(fdims$wgt), mean = fwgtmean, sd = fwgtsd)
+qqnorm(sim_norm_wgt)
+qqline(sim_norm_wgt)
+
+qqnormsim(fdims$wgt)
+qqnormsim(sim_norm_wgt)
+
+```
+
+### Exercise 6
+What are the chances of a random female being under 160 centimeters?
+Using p-norm: 0.2283
+Empirically: 0.1923
+Difference = 0.016
+
+What are the chances of a random female being over 50 kilograms?
+Using p-norm: 0.8648
+Empirically: 0.8808
+Difference = 0.0360
+
+The closest agreement was with the height variable.
+```{r code-chunk-6}
+pnorm(q = 160, mean = fhgtmean, sd = fhgtsd)
+sum(fdims$hgt < 160) / length(fdims$hgt)
+
+1 - pnorm(q = 50, mean = fwgtmean, sd = fwgtsd)
+sum(fdims$wgt > 50) / length(fdims$wgt)
+
+```
+
+# OYO 1
+a) A
+b) D
+c) C
+d) B
+
+# OYO 2
+Because the variables age for those two plots have patterns of sharp increases and decreases.
+
+# OYO 3
+The variable is skewed left.
+```{r code-chunk-oyo3}
+
+
+hist(fdims$kne.di, probability = TRUE)
+```

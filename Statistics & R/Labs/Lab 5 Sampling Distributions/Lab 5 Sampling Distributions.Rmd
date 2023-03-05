@@ -1,0 +1,150 @@
+---
+title: "Lab 5: Sampling Distributions "
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/ames.RData", destfile = "ames.RData")
+load("ames.RData")
+```
+
+### Exercise 1
+
+The population is unimodal with a left skew, with a median of 1442 and a range of 5308. The mean is slightly higher at 1500. Showing that middle 50% of houses are around 1126-1743 square feet, with a few over or above that.
+```{r code-chunk-e1}
+area <- ames$Gr.Liv.Area
+price <- ames$SalePrice
+summary(area)
+hist(area, breaks = 14)
+```
+
+### Exercise 2
+The distribution of this random sample is similar in shape to the population distribution, with a median of 1542 , and mean of 1525. The interquartile range is also similar. The left skew is present, as well as the one mode, and outliers.
+...
+```{r code-chunk-e2}
+samp1 <- sample(area, 50)
+
+summary(samp1)
+hist(samp1, breaks = 14)
+```
+
+### Exercise 3
+The mean of samp1 is 1547.5 while the mean of samp2 is slightly lower at 1473.42. With more samples, the estimates should provide a closer estimate of the population mean. So a sample of size 1000 would be more accurate than one of 100. 
+...
+```{r code-chunk-e3}
+
+samp2 <- sample(area, 50)
+
+mean(samp1)
+mean(samp2)
+```
+
+### Excercise 4
+The sample_means50 variable contains 5000 elements. The distribution of the means within sample_means50 is unimodal and symmetric with a center around 1500. With 50,000 samples, I would expect the distribution to be very similar similar shape and summary values, but with less error in the mean from the population mean.
+
+```{r code-chunk-e4}
+
+sample_means50 <- rep(NA, 5000)
+
+for(i in 1:5000){
+   samp <- sample(area, 50)
+   sample_means50[i] <- mean(samp)
+}
+
+hist(sample_means50, breaks = 25)
+summary(sample_means50)
+```
+
+### Excercise 5
+Each of the 100 elements in sample_means_small represents the average area from one of the 100 randoms samples of size 50 that were taken of area variable inside the for-loop.
+```{r code-chunk-e5}
+sample_means_small <- rep(0, 100)
+
+for(i in 1:100){
+  samp <- sample(area, 50)
+  sample_means_small[i] <- mean(samp)
+}
+
+sample_means_small
+```
+
+### Excercise 6
+As the sample size increases, it is clear that the center of the distribution becomes much more defined near the true population proportion.
+The spread of the distributions also decreases as the sample size increases. With more samples, there is less standard error so it makes sense that each of the observations are tighter to the center.
+```{r code-chunk-e6}
+hist(sample_means50)
+
+sample_means10 <- rep(NA, 5000)
+sample_means100 <- rep(NA, 5000)
+
+for(i in 1:5000){
+  samp <- sample(area, 10)
+  sample_means10[i] <- mean(samp)
+  samp <- sample(area, 100)
+  sample_means100[i] <- mean(samp)
+}
+
+par(mfrow = c(3, 1))
+
+xlimits <- range(sample_means10)
+
+hist(sample_means10, breaks = 20, xlim = xlimits)
+hist(sample_means50, breaks = 20, xlim = xlimits)
+hist(sample_means100, breaks = 20, xlim = xlimits)
+```
+
+### On Your Own 1
+The best point estimate for the population mean is $180,582
+```{r code-chunk-o1}
+sample_price <- sample(price, 50)
+summary(sample_price)
+hist(sample_price)
+```
+
+### On Your Own 2
+The shape of the distribution is unimodal and symmetric with an average-to-small spread and a few outliers. Based on this, I would expect the mean home price to be $181,000.00
+
+Calculated: $180,796.10
+```{r code-chunk-o2}
+sample_means50 <- rep(NA, 5000)
+
+for(i in 1:5000){
+  samp = sample(price, 50)
+  sample_means50[i] = mean(samp)
+}
+
+hist(sample_means50, breaks = 20, xlim = range(sample_means50))
+
+mean(price)
+
+```
+
+### On Your Own 3
+The distribution for a sample size of 150 is very similar to the last one. With a slightly tighter spread, and a more defined center near $180,000. Based on this, I would guess the mean sale price of homes in Ames to be $180,000.00
+```{r code-chunk-o3}
+sample_means150 <- rep(NA, 5000)
+
+for(i in 1:5000){
+  samp = sample(price, 150)
+  sample_means150[i] = mean(samp)
+}
+
+hist(sample_means150, breaks = 20, xlim = range(sample_means150))
+
+```
+
+### On Your Own 4
+The distribution in problem 3 had a smaller spread. When making estimates closest to population values, it would be best to have the smallest spread possible, as that decreases the range of unlikely possibilities being estimated.In problem 3, with less spread. It was easier to esimate a value closer to the calculated population mean.
+```{r code-chunk-o4}
+
+hist(sample_means50, breaks = 20, xlim = range(sample_means50))
+hist(sample_means150, breaks = 20, xlim = range(sample_means150))
+mean(price)
+mean(sample_means150)
+mean(sample_means50)
+
+```

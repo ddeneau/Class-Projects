@@ -1,0 +1,115 @@
+---
+title: "Lab 6: Confidence Intervals"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/ames.RData", destfile = "ames.RData")
+load("ames.RData")
+```
+
+### Exercise 1
+The distribution of house sizes is asymetric and skewed left with high spread and a center around 1450 square feet. The typical size, or the most occuring house size in the distribution, is 1300 square feet. 
+```{r code-chunk-e1}
+population <- ames$Gr.Liv.Area
+samp <- sample(population, 60)
+hist(samp, breaks = 20)
+```
+
+### Exercise 2
+Just making a few, its clear that each distribution looks quite different, with different modes and varying levels of spread. Some histograms have clearly defined skews while others do not. 
+...
+```{r code-chunk-e2}
+for(i in 1:10){
+  samp <- sample(population, 60)
+  hist(samp, breaks = 20)
+}
+```
+
+### Exercise 3
+The observations collected must be independent from each other, and the success-failure condition must be met. Which means the sample size times the population mean must be greater than 10, and the sample size times one minus the population must be greater than 10. Since R's sample function was used, the observations are independent. and the success-failure condition is met.
+...
+```{r code-chunk-e3}
+sample_mean <- mean(samp)
+se <- sd(samp) / sqrt(60)
+lower <- sample_mean - 1.96 * se
+upper <- sample_mean + 1.96 * se
+c(lower, upper)
+```
+
+### Excercise 4
+A 95% confidence interval means 95% of the samples contain the true population mean, while the other 5% do not.
+
+### Excercise 5
+The true mean, 1499.69, is within our interval (1365.47, 1665.30). 
+```{r code-chunk-e5}
+mean(population)
+```
+
+### Excercise 6
+95% of the intervals should capture the true population mean. This is because we are collecting random samples each time of the population variable, which sometimes (5% of the time) may not contain the true mean. 2.5% of the time the interval will be too low, and 2.5% of the time if will be too high. 
+
+### On Your Own 1
+Two of the intervals did not contain the true population mean, while the remaning 48 did. With a proportion of 0.9583. It is slightly higher than the confidence level of 95%. This is because we made the plot with random sampled data, which could have led to any low number of intervals without the true mean. 
+
+```{r code-chunk-o1}
+samp_mean <- rep(NA, 50)
+samp_sd <- rep(NA, 50)
+n <- 60
+
+for(i in 1:50){
+  samp <- sample(population, n) # obtain a sample of size n = 60 from the population
+  samp_mean[i] <- mean(samp)    # save sample mean in ith element of samp_mean
+  samp_sd[i] <- sd(samp)        # save sample sd in ith element of samp_sd
+}
+
+lower_vector <- samp_mean - 1.96 * samp_sd / sqrt(n) 
+upper_vector <- samp_mean + 1.96 * samp_sd / sqrt(n)
+
+c(lower_vector[1], upper_vector[1])
+
+plot_ci(lower_vector, upper_vector, mean(population))
+
+1 - (2/48)
+```
+
+### On Your Own 2
+Used confidence level of 99%, and got a critical value of 0.6031
+
+Calculated: $180,796.10
+```{r code-chunk-o2}
+se <- sd(samp) / sqrt(60)
+lower99 <- sample_mean - 2.58 * se
+upper99 <- sample_mean + 2.58 * se
+c(lower, upper)
+
+pop_mean <- mean(population)
+z <- (sample_mean - pop_mean) / length(samp)
+pnorm(z)
+```
+
+### On Your Own 3
+Using a 99% confidence interval, the proportion of intervals that include the true population mean is 1, as there are no intervals that do not contain the true mean. This is slighlty better than the 95% confidence interval with just 2 intervals without the true mean, as expected.
+```{r code-chunk-o3}
+samp_mean <- rep(NA, 50)
+samp_sd <- rep(NA, 50)
+n <- 60
+
+for(i in 1:50){
+  samp <- sample(population, n) # obtain a sample of size n = 60 from the population
+  samp_mean[i] <- mean(samp)    # save sample mean in ith element of samp_mean
+  samp_sd[i] <- sd(samp)        # save sample sd in ith element of samp_sd
+}
+
+lower_vector <- samp_mean - 2.58 * samp_sd / sqrt(n) 
+upper_vector <- samp_mean + 2.58 * samp_sd / sqrt(n)
+
+c(lower_vector[1], upper_vector[1])
+
+plot_ci(lower_vector, upper_vector, mean(population))
+```
+

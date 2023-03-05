@@ -1,0 +1,27 @@
+---
+title: "Lab 8: Inference for Numerical Data"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+download.file("http://www.openintro.org/stat/data/nc.RData", destfile = "nc.RData")
+load("nc.RData")
+```
+
+### Exercise 1
+
+The cases are expectant mothers and the children they birth. There are 1000 cases.
+
+```{r e1l}
+count(nc)
+```
+
+### Exercise 2
+```{r e2}
+boxplot(nc$weight~nc$habit, ylab="weight", xlab="habit")
+...
+

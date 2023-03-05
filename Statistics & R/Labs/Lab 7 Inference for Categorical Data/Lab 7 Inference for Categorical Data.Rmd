@@ -1,0 +1,264 @@
+---
+title: "Lab 7: Inference for Categorical DataR"
+author: "Daniel Deneau"
+date: "`r Sys.Date()`"
+output: openintro::lab_report
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Exercise 1
+These percentages appear to be sample statistics derived from the data sample provided WIN-Gallup
+
+### Exercise 2
+
+We must assume that the sampling method was random, and each sample was done independently. This does seem reasonable to do with  polls.
+
+### Exercise 3
+
+Each row in table 6 corresponds to a different country. Each row of atheism. Each row of the atheism table corresponds to an individual response by someone to the question of whether or not they are atheist.
+
+```{r e3}
+download.file("http://www.openintro.org/stat/data/atheism.RData", destfile = "atheism.RData")
+load("atheism.RData")
+atheism
+```
+
+
+### Exercise 4
+
+The calculated proportion is:
+0.05
+
+The table shows the percentage of convinced atheists in the US to be 5%. so they do agree.
+```{r e4}
+us12 <- subset(atheism, nationality == "United States" & year == "2012")
+
+us12_ath <- subset(us12, response=='atheist')
+count(us12_ath) / count(us12)
+
+
+```
+
+
+### Exercise 5
+
+First the samples must be random and independent, which they are since the poll was done randomly. Second, the success-failure criteria must be met:
+```{r e5}
+p = count(us12_ath)/count(us12)
+n = count(us12)
+n * p
+n * (1 - p)
+
+```
+Which they are.
+
+### Exercise 6
+```{r e6}
+inference(us12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+
+```
+The Margin of error is: 0.01 or 1%
+```{r e6_2}
+(1.95 * 0.0069)
+```
+
+### Exercise 7
+
+For both Italy and Germany, the sampling is assumed to be random and independent.
+The success-failure criteria for both countries are met  as well.
+```{r e7}
+it12 <- subset(atheism, nationality == "Italy" & year == "2012")
+ge12 <- subset(atheism, nationality == "Germany" & year == "2012")
+it_ath = subset(it12, response=="atheist")
+ge_ath = subset(ge12, response=="atheist")
+p_i = count(it_ath)/count(it12)
+p_g = count(ge_ath)/count(ge12)
+p_i * count(it12)
+(1 - p_i) * count(it12)
+
+p_g * count(ge12)
+(1 - p_g) * count(ge12)
+```
+
+```{r e7 inference}
+inference(it12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+inference(ge12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+```
+The margin of error for Italy is: 0.0086 or 0.86%
+```{r e7-italy}
+0.0086 * 1.95
+```
+The margin of error for Germany is: 0.0159 or 1.59%
+```{r e7-germany}
+0.0159 * 1.95
+```
+
+
+### Exercise 8
+As the population proportion increases, the margin of error increases exponentially up to 50%. Once above 0.5, the margin of error decreases exponentially as the population proportion increases
+```{r e8}
+n <- 1000
+p <- seq(0, 1, 0.01)
+me <- 2 * sqrt(p * (1 - p)/n)
+plot(me ~ p, ylab = "Margin of Error", xlab = "Population Proportion")
+```
+
+### Exercise 9
+
+The distribution is normal with a slight left skew and average spread.
+The distribution is centered at the 0.1, with a mean 0f 0.09991. The interquartile range is .10577 - .09327 = 0.0125.
+The range is .13558 - 0.06923 = 0.06635
+```{r e9}
+p <- 0.1
+n <- 1040
+p_hats <- rep(0, 5000)
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  p_hats[i] <- sum(samp == "atheist")/n
+}
+
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+summary(p_hats)
+
+```
+
+### Exercise 10
+As n increases, the spread and standard deviation decreases and the mode becomes more precise.
+As p increases, the distribution remains about the same with a slightly different center.
+```{r e10}
+
+p <- 0.1
+n <- 1040
+p_hats <- rep(0, 5000)
+
+p_2 <- 0.1
+n_2 <- 400
+p_hats2 <- rep(0, 5000)
+
+p_3 <- 0.02
+n_3 <- 1040
+p_hats3 <- rep(0, 5000)
+
+p_4 <- 0.02
+n_4 <- 400
+p_hats4 <- rep(0, 5000)
+
+
+for(i in 1:5000){
+  samp <- sample(c("atheist", "non_atheist"), n, replace = TRUE, prob = c(p, 1-p))
+  samp <- sample(c("atheist", "non_atheist"), n_2, replace = TRUE, prob = c(p_2, 1-p_2))
+  samp <- sample(c("atheist", "non_atheist"), n_3, replace = TRUE, prob = c(p_3, 1-p_3))
+  samp <- sample(c("atheist", "non_atheist"), n_4, replace = TRUE, prob = c(p_4, 1-p_4))
+  p_hats[i] <- sum(samp == "atheist")/n
+  p_hats2[i] <- sum(samp == "atheist")/n_2
+  p_hats3[i] <- sum(samp == "atheist")/n_3
+  p_hats4[i] <- sum(samp == "atheist")/n_4
+}
+
+par(mfrow = c(2, 2))
+hist(p_hats, main = "p = 0.1, n = 1040", xlim = c(0, 0.18))
+hist(p_hats2, main = "p = 0.1, n = 400", xlim = c(0, 0.18))
+hist(p_hats3, main = "p = 0.2, n = 1040", xlim = c(0, 0.18))
+hist(p_hats4, main = "p = 0.2, n = 400", xlim = c(0, 0.18))
+
+```
+
+### Exercise 11
+Yes, because the distributions appear to be close to normal.
+
+### OYO 1
+a) Null Hypothesis: Spain has seen no change in its atheism index between 2005 and 2012
+   Alt Hypothesis: Spain has seen some change in its atheism index between 2005 and 2012.
+   The poll was random and independent, and the success-failure criteria are me:
+   
+```{r o1-sf}
+sp12 <- subset(atheism, nationality == "Spain" & year == "2012")
+
+sp12_ath = subset(sp12, response=="atheist")
+
+sp05 <- subset(atheism, nationality == "Spain" & year == "2005")
+
+sp05_ath = subset(sp05, response=="atheist")
+
+p_s = count(sp12_ath)/count(sp12)
+
+p_s * count(sp12)
+(1 - p_s) * count(sp12)
+
+p_s05 = count(sp05_ath)/count(sp05)
+
+p_s05 * count(sp05)
+(1 - p_s05) * count(sp05)
+
+```
+ The confidence levels do overlap quite a bit, therefore we can not reject the null hypothesis. There is not convincing evidence that Spain has seen a change.
+```{r o1-inf}
+inference(sp12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+inference(sp05$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+```
+ b) Null Hypothesis: The United States has seen no change in its atheism index between 2005 and 2012
+   Alt Hypothesis: The United States has seen some change in its atheism index between 2005 and 2012.
+   The poll was random and independent, and the success-failure criteria are me:
+   
+```{r o1-us}
+us12 <- subset(atheism, nationality == "United States" & year == "2012")
+
+us12_ath = subset(us12, response=="atheist")
+
+us05 <- subset(atheism, nationality == "United States" & year == "2005")
+
+us05_ath = subset(us05, response=="atheist")
+
+p_u = count(sp12_ath)/count(sp12)
+
+p_u * count(us12)
+(1 - p_u) * count(us12)
+
+p_u05 = count(us05_ath)/count(us05)
+
+p_u05 * count(us05)
+(1 - p_u) * count(sp05)
+
+```
+ The confidence levels do not overlap quite at all, therefore we can reject the null hypothesis. There is convincing evidence that the United States has seen a change.
+```{r o1-inf-us}
+inference(us12$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+inference(us05$response, est = "proportion", type = "ci", method = "theoretical", 
+          success = "atheist")
+```
+
+### OYO 2
+A type 1 error would be rejecting the null hypothesis that there is no change, when there is.
+With 39 countries, I would expect to detect a change in 2 countries by chance, at a signifiance level of 0.05.
+
+```{r o2}
+0.05 * 39
+```
+
+### OYO 3
+We would have to calculate the sample size from the standard error and population proportion, which is assumed to be 0.5.
+
+```{r o3}
+p = 0.5
+m_error = 0.01
+z = 1.95
+
+standard_error = m_error/z
+
+n = (p*p) / standard_error^2
+n
+
+```
+So n must be at least n = 9506.25
+n = 9507

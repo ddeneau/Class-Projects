@@ -1,0 +1,27 @@
+-- Answer 1 -- 
+SELECT category_name AS 'Product Category', SUM(quantity)
+	AS 'Number Purchased',
+	CONCAT('$', FORMAT(AVG(discount_amount), 2))
+	AS 'Average Discount Amount',
+	CONCAT('$', FORMAT(AVG(list_price), 2))
+	AS 'Average List Price'
+FROM categories
+	LEFT JOIN products AS p USING(category_id)
+	LEFT JOIN order_items AS oi ON (p.product_id  = oi.product_id)
+GROUP BY category_name WITH ROLLUP;
+
+-- Answer 2 --
+SELECT CONCAT(first_name, ' ', last_name) AS 'Customer Name', email_address AS 'Customer Email',
+	CONCAT(city, ', ', state) AS 'Customer City', 
+    (SELECT COUNT(*) AS 'as' FROM orders WHERE orders.customer_id = customers.customer_id) AS 'Number of Orders',
+    MAX(order_date) AS 'Most Recent Order'
+FROM customers INNER JOIN addresses USING(customer_id)
+	RIGHT JOIN orders USING(customer_id)
+WHERE (SELECT COUNT(*) FROM orders WHERE orders.customer_id = customers.customer_id) > 0 
+GROUP BY email_address
+ORDER BY last_name
+
+/* I used a subquery because I found it more intuitive to come up with a solution for. When I tried solving the problem using CTE's
+I ran into a lot of problems. Using 'select count(*) FROM orders' seemed like the easiest way to get the number of orders. */
+
+

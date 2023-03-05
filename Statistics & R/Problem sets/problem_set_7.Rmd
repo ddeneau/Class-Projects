@@ -1,0 +1,57 @@
+---
+title: "Problem Set 7"
+author: "Daniel Deneau"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problems 7.3, 7.12, 7.17, 7.21, 7.23, 7.28, 7.33, 7.39
+
+
+## Problem 7.3:
+a)
+```{r 7.3a}
+n <- 11
+T <- 1.91
+```
+a)
+```{r 7.3b}
+```
+
+## Probelm 7.12:
+a) Null Hypothesis: concentration of 
+
+
+## Problem 7.17:
+a) not paired
+b) paired
+c) paired
+d) paired
+
+## Problem 7.21:
+a)
+```{r 7.21}
+n = 197
+deg = n - 1
+m = 2.9
+sd = 17.9
+
+standard_error = sd / sqrt(n)
+t = a
+
+```
+
+## Problem 7.23:
+
+## Problem 7.28:
+
+## Problem 7.33:
+
+## Problem 7.39:
+
+

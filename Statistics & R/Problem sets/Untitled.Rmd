@@ -1,0 +1,37 @@
+---
+title: "Problem Set 5"
+output: html_document
+author: "Daniel Deneau"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problems  5.2,  5.5,  5.7,  5.9,  5.15,  5.25,  5.26,  5.37
+
+
+## Problem 5.2:
+a) proportion
+b) proportion
+c) mean
+d) mean
+e) mean
+
+## Probelm 5.5:
+a) Normal Distribution
+b) Mostly because the non-profit expects the population proportion of households with elevated
+    lead levels to be 5%-30%, I expect the distribution to be skewed to the left, with most 
+    households having low-to-average lead levels in their drinking water, and a few outliers 
+    with higher levels.
+c) The variability is: 0.0086
+d) Standard error
+e) The variability will decrease as the number of observations per sample is lower.
+
+```{r cars}
+p <- 0.08
+n <- 1000
+se <- sqrt((p*(1-p))/n)
+se
+```
+

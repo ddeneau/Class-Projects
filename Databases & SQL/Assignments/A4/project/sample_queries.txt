@@ -1,0 +1,27 @@
+— Query A — 
+SELECT trail_name, amenity_type FROM trails 
+	JOIN trails_amenities USING(trail_id)
+	JOIN amenities USING(amenity_id)
+	WHERE amenity_type != 'Kid Friendly';
+
+— Query B —
+SELECT location_name, trail_name FROM locations
+	JOIN trails USING (location_id)
+	WHERE trail_rating > (SELECT AVG(trail_rating) FROM trails);
+
+— Query C —
+SELECT trail_name, trail_distance FROM trails
+	JOIN locations USING (location_id)
+	JOIN states USING (state_id)
+	WHERE state_code = 'AL';
+
+— Query D —
+SELECT COUNT(first_name) AS 'visits_to_trail', trail_name FROM visitors
+	JOIN locations USING (location_id)
+	JOIN trails USING (location_id)
+GROUP BY trail_name;
+
+— Query E —
+SELECT trail_name, state_code FROM trails
+	JOIN locations USING (location_id)
+	JOIN states USING (state_id);
