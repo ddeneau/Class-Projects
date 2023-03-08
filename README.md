@@ -9,22 +9,6 @@ Most of the work was done individually, with most final projects done in teams. 
 
 ## Intro to Data Science (Python/Go)
 
-## _includes/image.html
-<div class="image-wrapper" >
-  {% if include.url %}
-  <a href="{{ include.url }}" title="{{ include.title }}" target="_blank">
-  {% endif %}
-      <img src="{{ site.url }}/{{ include.img }}" alt="{{ include.title }}"/>
-  {% if include.url %}
-  </a>
-  {% endif %}
-  {% if include.caption %}
-      <p class="image-caption">{{ include.caption }}</p>
-  {% endif %}
-</div>
-
-## Include the image in your post and specify a caption with this tag
-{% include image.html img="https://user-images.githubusercontent.com/58960615/222945376-b259ebc6-4850-4016-88c9-ac070f8992b4.png" title="TITLE" caption="" %}
 ![output](https://user-images.githubusercontent.com/58960615/222945376-b259ebc6-4850-4016-88c9-ac070f8992b4.png)
 
 One python folder contains work from an introductory python class, which is a little basic, but still interesting.
