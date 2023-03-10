@@ -51,3 +51,4 @@ https://github.com/ruroode/Group18-Final-INST377SP2021
 
 
 
+Also, yes, I received permission (and encouragement) to have all of this course-related material publically available online. There are no test/exam/quiz materials, or anything copyrighted that I'm claiming as my original work.
