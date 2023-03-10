@@ -2,4 +2,4 @@
 
 ## Airport Wind Project
 
-Using an airport data API, I compare the wind and plane flight speeds of planes at major US Airports across the country.
+Using an airport data API, I compare the wind speeds and frequency of flights at major US Airports across the country.
