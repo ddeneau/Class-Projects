@@ -1,7 +1,8 @@
 ### Assignments
-
+Four collections of queries.
 
 ### Labs
+
 
 
 ### Team Project
