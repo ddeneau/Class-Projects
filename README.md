@@ -7,16 +7,17 @@ Most of the work was done individually, with most final projects done in teams. 
 
 # Sections
 
-## Intro to Data Science (Python/Go)
+## Data Science (Python/Go/R)
 
-![output](https://user-images.githubusercontent.com/58960615/222945376-b259ebc6-4850-4016-88c9-ac070f8992b4.png)
+<img width="405" alt="Screen Shot 2023-03-10 at 5 30 55 PM" src="https://user-images.githubusercontent.com/58960615/224440397-dfffd8bc-60b4-4667-8619-b21348154d92.png"> ![output](https://user-images.githubusercontent.com/58960615/222945376-b259ebc6-4850-4016-88c9-ac070f8992b4.png) 
 
 One python folder contains work from an introductory python class, which is a little basic, but still interesting.
 In the intro to data science folder, theres 4 module projects, done individually, using publically available datasets, and SKLearn.
 
 There is also a final project, using Go for data collection, and Python for data analysis.
 
-
+Finally, the R folder contains projects with content ranging from graphing, to multiple regression analysis. Each lab has an rmd and html markdown file.
+The problem sets are similar, just a bit more basic.
 
 
 
