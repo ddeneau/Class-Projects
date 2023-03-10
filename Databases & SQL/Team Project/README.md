@@ -34,5 +34,7 @@ possible, therefore, there could be many values.
 
 ## Entity Relationship Diagram
 
+<img width="562" alt="Screen Shot 2023-03-10 at 6 40 54 PM" src="https://user-images.githubusercontent.com/58960615/224448594-ffe4d573-fbfb-4c4a-a61c-fd9066296a4f.png">
+
 
 
