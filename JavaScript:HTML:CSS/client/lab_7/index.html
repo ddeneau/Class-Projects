@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8'/>
+    <title>Some Web Page</title>
+    <link rel='stylesheet' href='styles.css'/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+  </head>
+  <body>
+    <div class="is-flex-direction-column p-4">
+      <div class="box has-background-info has-text-warning">
+        <h>Daniel Deneau's Lab 7</h>
+      </div>
+      <div class="inner">
+        <div class="box">
+          <form class="main_form">
+            <div class="field">
+              <label for='rest_name' class="label">Restaurant Name</label>
+              <div class="control">
+                <input class="input" type="name" id="rest_name">
+              </div>
+            </div>
+            <div class="field">
+              <label for='zipcode' class="label">Zipcode</label>
+              <div class="control">
+                <input class="input" type="name" id="zipcode">
+              </div>
+            </div>
+            <div class="field">
+              <label class="label"></label>
+              <button class="submit_button">Shuffle Restaurants</button>
+            </div>
+          </form>
+        </div>
+        <div class="box ml: ml-4">
+          <h><strong>Restaurant List</strong></h>
+          <ul class="rest_list">
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
